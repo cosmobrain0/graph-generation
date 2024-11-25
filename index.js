@@ -32,15 +32,29 @@ const renderPoint = (point, minY, maxY) => {
   ctx.stroke();
 }
 
+const renderAxes = (minY, maxY) => {
+  let yZero = -minY/(maxY-minY);
+  ctx.beginPath();
+  ctx.moveTo(-250, 1000 - yZero*1000);
+  ctx.lineTo(750, 1000 - yZero*1000);
+  ctx.moveTo(0, 1000);
+  ctx.lineTo(0, 0);
+  ctx.strokeStyle = "#ccc";
+  ctx.stroke();
+}
+
 const updateScreen = () => {
+  let minY = getMinY();
+  let maxY = getMaxY();
+
   ctx.clearRect(0, 0, c.width, c.height);
 
   ctx.save();
   ctx.scale(0.5, 0.5);
   ctx.translate(250, 0);
 
-  let minY = getMinY();
-  let maxY = getMaxY();
+  renderAxes(minY, maxY);
+
   for (let point of points) {
     renderPoint(point, minY, maxY);
   }
@@ -87,7 +101,7 @@ document.getElementById(ENDING_INPUT_ID).onchange = () => {
   updateScreen();
 }
 
-document.getElementById("graphName").onchange = document.getElementById("samples").onchange = document.getElementById("minY").onchange = document.getElementById("maxY").onchange = document.getElementById("outputDecimalPlaces").onchange = updateScreen;
+document.getElementById("outputSamples").onchange = document.getElementById("graphName").onchange = document.getElementById("samples").onchange = document.getElementById("minY").onchange = document.getElementById("maxY").onchange = document.getElementById("outputDecimalPlaces").onchange = updateScreen;
 
 c.oncontextmenu = e => {
   return false;
