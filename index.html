@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Graph Generation</title>
+		<script src="input.js" type="text/javascript"></script>
+		<script src="download.js" type="text/javascript"></script>
+		<script src="graph.js" type="text/javascript"></script>
+		<script src="index.js" type="text/javascript" defer></script>
+	</head>
+	<body>
+		<input type="number" id="startingY" placeholder="Starting y coordinate..." value=0.0 />
+		<input type="number" id="endingY" placeholder="Final y coordinate..." value=1.0 />
+		<input type="number" id="samples" placeholder="Samples for rendering..." value=500 />
+		<input type="number" id="outputSamples" placeholder="Samples for output..." value=500 />
+		<input type="number" id="minY" placeholder="Y value at bottom of canvas..." value=0 />
+		<input type="number" id="maxY" placeholder="Y value at top of canvas..." value=1 />
+		<input type="text" id="graphName" placeholder="Name of the graph..." />
+		<br />
+		<canvas id="canvas"></canvas>
+		<br />
+		<p id="output"></p>
+	</body>
+</html>
