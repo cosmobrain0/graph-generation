@@ -1,4 +1,5 @@
 let c = document.getElementById("canvas");
+/** @type {CanvasRenderingContext2D} */
 let ctx = c.getContext("2d");
 
 c.width = 500;
@@ -39,6 +40,21 @@ const verticalLine = x => {
   ctx.stroke();
 }
 
+const label = (text, x, y, minY, maxY) => {
+  x *= 500;
+  y = (y-minY)/(maxY-minY);
+  y = 1000 - y*1000;
+  console.log(text, x, y);
+  ctx.font = "15px Arial";
+  let metrics = ctx.measureText(text);
+  let width = metrics.actualBoundingBoxRight-metrics.actualBoundingBoxLeft;
+  let height = metrics.actualBoundingBoxDescent-metrics.actualBoundingBoxAscent;
+  ctx.fillStyle = "#000";
+  ctx.fillRect(x-width*1.3/2, y-height*1.3/2, width*1.3, height*1.3);
+  ctx.fillStyle = "#fff";
+  ctx.fillText(text, x-width/2, y-height/2);
+}
+
 const horizontalLine = (y, minY, maxY) => {
   y = (y-minY)/(maxY-minY);
   ctx.beginPath();
@@ -65,6 +81,15 @@ const renderAxes = (minY, maxY) => {
   ctx.strokeStyle = "#ccc";
   horizontalLine(0, minY, maxY);
   verticalLine(0);
+
+  for (let y=k; y<=maxY; y+=offset) {
+    if (y == 0) continue;
+    label(y.toPrecision(2).toString(), 0, y, minY, maxY);
+  }
+  for (let x=-0.5; x<=1.5; x+=0.1) {
+    if (Math.abs(x) < 0.01) continue;
+    label(x.toPrecision(2).toString(), x, 0, minY, maxY);
+  }
 }
 
 const updateScreen = () => {
