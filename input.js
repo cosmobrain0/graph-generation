@@ -21,3 +21,9 @@ const getOutputSamples = () => {
   if (samples <= 0) return 100;
   else return samples;
 }
+
+const getOutputDecimalPlaces = () => {
+  let dp = getInput("outputDecimalPlaces");
+  if (dp <= 0) return 3;
+  else return dp;
+}

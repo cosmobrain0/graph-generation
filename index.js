@@ -87,7 +87,7 @@ document.getElementById(ENDING_INPUT_ID).onchange = () => {
   updateScreen();
 }
 
-document.getElementById("samples").onchange = document.getElementById("minY").onchange = document.getElementById("maxY").onchange = updateScreen;
+document.getElementById("samples").onchange = document.getElementById("minY").onchange = document.getElementById("maxY").onchange = document.getElementById("outputDecimalPlaces").onchange = updateScreen;
 
 c.oncontextmenu = e => {
   return false;
