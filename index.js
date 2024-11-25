@@ -32,15 +32,39 @@ const renderPoint = (point, minY, maxY) => {
   ctx.stroke();
 }
 
-const renderAxes = (minY, maxY) => {
-  let yZero = -minY/(maxY-minY);
+const verticalLine = x => {
   ctx.beginPath();
-  ctx.moveTo(-250, 1000 - yZero*1000);
-  ctx.lineTo(750, 1000 - yZero*1000);
-  ctx.moveTo(0, 1000);
-  ctx.lineTo(0, 0);
-  ctx.strokeStyle = "#ccc";
+  ctx.moveTo(x*500, 1000);
+  ctx.lineTo(x*500, 0);
   ctx.stroke();
+}
+
+const horizontalLine = (y, minY, maxY) => {
+  y = (y-minY)/(maxY-minY);
+  ctx.beginPath();
+  ctx.moveTo(-250, 1000 - y*1000);
+  ctx.lineTo(750, 1000 - y*1000);
+  ctx.stroke();
+}
+
+const renderAxes = (minY, maxY) => {
+  ctx.strokeStyle = "#333";
+  ctx.lineWidth = 3;  
+  for (let x=-0.5; x<=1.5; x+=0.1) {
+    verticalLine(x);
+  }
+
+  let orderOfMagnitude = Math.floor(Math.log10((maxY-minY)));
+  let offset = Math.pow(10, orderOfMagnitude-1);
+  let k = Math.floor(minY/offset);
+  for (let y=k; y<=maxY; y += offset) {
+    horizontalLine(y, minY, maxY);
+  }
+  console.log(offset);
+
+  ctx.strokeStyle = "#ccc";
+  horizontalLine(0, minY, maxY);
+  verticalLine(0);
 }
 
 const updateScreen = () => {
@@ -73,7 +97,12 @@ updateScreen();
 window.addEventListener("mousedown", e => {
   if (e.target != c) return;
   e.preventDefault();
+
+  let maxY = getMaxY();
+  let minY = getMinY();
+  
   let point = [e.offsetX/250 - 0.5, 1 - (e.offsetY/500)];
+  point[1] = point[1]*(maxY-minY) + minY;
 
   if (e.button == 0) {
     if (point[0] > 0 && point[0] < 1)
