@@ -40,7 +40,7 @@ const verticalLine = x => {
   ctx.stroke();
 }
 
-const label = (text, x, y, minY, maxY) => {
+const label = (text, x, y, minY, maxY, globalOffsetX, globalOffsetY) => {
   x *= 500;
   y = (y-minY)/(maxY-minY);
   y = 1000 - y*1000;
@@ -50,9 +50,9 @@ const label = (text, x, y, minY, maxY) => {
   let width = metrics.actualBoundingBoxRight-metrics.actualBoundingBoxLeft;
   let height = metrics.actualBoundingBoxDescent-metrics.actualBoundingBoxAscent;
   ctx.fillStyle = "#000";
-  ctx.fillRect(x-width*1.3/2, y-height*1.3/2, width*1.3, height*1.3);
+  ctx.fillRect(x-width*1.3/2 + globalOffsetX, y-height*1.3/2 + globalOffsetY, width*1.3, height*1.3);
   ctx.fillStyle = "#fff";
-  ctx.fillText(text, x-width/2, y-height/2);
+  ctx.fillText(text, x-width/2 + globalOffsetX, y-height/2 + globalOffsetY);
 }
 
 const horizontalLine = (y, minY, maxY) => {
@@ -82,13 +82,13 @@ const renderAxes = (minY, maxY) => {
   horizontalLine(0, minY, maxY);
   verticalLine(0);
 
-  for (let y=k; y<=maxY; y+=offset) {
-    if (y == 0) continue;
-    label(y.toPrecision(2).toString(), 0, y, minY, maxY);
+  for (let y=k; y<=maxY; y+=offset*2) {
+    if (Math.abs(y) < 0.01) continue;
+    label(y.toPrecision(2).toString(), 0, y, minY, maxY, -30, 0);
   }
-  for (let x=-0.5; x<=1.5; x+=0.1) {
+  for (let x=-0.5; x<=1.5; x+=0.2) {
     if (Math.abs(x) < 0.01) continue;
-    label(x.toPrecision(2).toString(), x, 0, minY, maxY);
+    label(x.toPrecision(2).toString(), x, 0, minY, maxY, 0, 20);
   }
 }
 
