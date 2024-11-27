@@ -135,7 +135,7 @@ window.addEventListener("mousedown", e => {
   } else if (e.button == 2) {
     // point[1] -= minY;
     // point[1] /= (maxY-minY); 
-    const distance = (a, b) => Math.sqrt((b[1]-a[1])*(b[1]-a[1])*4 + (b[0]-a[0])*(b[0]-a[0]));
+    const distance = (a, b) => Math.sqrt((b[1]-a[1])*(b[1]-a[1])/((maxY-minY)*(maxY-minY))*4 + (b[0]-a[0])*(b[0]-a[0]));
     for (let i=points.length-2; i>=1; i--) {
       if (distance(point, points[i]) <= 25/500) {
         points.splice(i, 1);
@@ -160,3 +160,15 @@ document.getElementById("outputSamples").onchange = document.getElementById("gra
 c.oncontextmenu = e => {
   return false;
 }
+
+// window.addEventListener('mousemove', e => {
+//   let maxY = getMaxY();
+//   let minY = getMinY();
+  
+//   let point = [e.offsetX/250 - 0.5, 1 - (e.offsetY/500)];
+//   point[1] = point[1]*(maxY-minY) + minY;
+  
+//   const distance = (a, b) => Math.sqrt((b[1]-a[1])*(b[1]-a[1])/((maxY-minY)*(maxY-minY))*4 + (b[0]-a[0])*(b[0]-a[0]));
+//   let canDelete = distance(point, points[1]) <= 25/500;
+//   document.getElementById("output").innerText = `${point[0]}, ${point[1]} - ${canDelete}`;
+// })
