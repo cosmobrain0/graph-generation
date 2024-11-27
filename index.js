@@ -29,7 +29,7 @@ const renderPoint = (point, minY, maxY) => {
   ctx.beginPath();
   ctx.strokeStyle = "#fff";
   let y = (point[1]-minY)/(maxY-minY);
-  ctx.arc(point[0]*500, 1000 - y*1000, 10, 0, 2*Math.PI);
+  ctx.arc(point[0]*500, 1000 - y*1000, 25, 0, 2*Math.PI);
   ctx.stroke();
 }
 
@@ -44,7 +44,6 @@ const label = (text, x, y, minY, maxY, globalOffsetX, globalOffsetY) => {
   x *= 500;
   y = (y-minY)/(maxY-minY);
   y = 1000 - y*1000;
-  console.log(text, x, y);
   ctx.font = "15px Arial";
   let metrics = ctx.measureText(text);
   let width = metrics.actualBoundingBoxRight-metrics.actualBoundingBoxLeft;
@@ -76,7 +75,6 @@ const renderAxes = (minY, maxY) => {
   for (let y=k; y<=maxY; y += offset) {
     horizontalLine(y, minY, maxY);
   }
-  console.log(offset);
 
   ctx.strokeStyle = "#ccc";
   horizontalLine(0, minY, maxY);
@@ -135,9 +133,11 @@ window.addEventListener("mousedown", e => {
     points.sort((a, b) => a[0]-b[0]);
     updateScreen();
   } else if (e.button == 2) {
-    const distance = (a, b) => Math.sqrt((b[1]-a[1])*(b[1]-a[1]) + (b[0]-a[0])*(b[0]-a[0]));
+    // point[1] -= minY;
+    // point[1] /= (maxY-minY); 
+    const distance = (a, b) => Math.sqrt((b[1]-a[1])*(b[1]-a[1])*4 + (b[0]-a[0])*(b[0]-a[0]));
     for (let i=points.length-2; i>=1; i--) {
-      if (distance(point, points[i]) <= 10/500) {
+      if (distance(point, points[i]) <= 25/500) {
         points.splice(i, 1);
       }
     }
