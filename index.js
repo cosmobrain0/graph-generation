@@ -161,6 +161,12 @@ c.oncontextmenu = e => {
   return false;
 }
 
+window.addEventListener("load", e => {
+  points[0][1] = getInput("startingY");
+  points[points.length-1][1] = getInput("endingY");
+  updateScreen();
+})
+
 // window.addEventListener('mousemove', e => {
 //   let maxY = getMaxY();
 //   let minY = getMinY();
