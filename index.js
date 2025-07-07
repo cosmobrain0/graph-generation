@@ -188,10 +188,23 @@ const updateGraphInputOutput = () => {
 
 document.getElementById("load-input-graph").onclick = () => {
   let inputData = document.getElementById("graph-data-input").value;
+  const samplePercentage = parseFloat(document.getElementById("input-sample-percent").value);
   const graphName = inputData.split(" - ")[0];
-  const graphPoints = inputData.split(" - ")[1].split(" ; ").map(coordinate => coordinate.split(",").map(ordinate => parseFloat(ordinate)));
+  let graphPoints = inputData.split(" - ")[1].split(" ; ").map(coordinate => coordinate.split(",").map(ordinate => parseFloat(ordinate)));
+
+  let innerPoints = graphPoints.slice(1, graphPoints.length-1);
+  let chunkSize = Math.floor(1 / samplePercentage);
+  chunkSize = Math.min(Math.max(0, chunkSize), innerPoints.length);
+  console.log(innerPoints.length / chunkSize);
+  let finalGraphPoints = [graphPoints[0]];
+  for (let i=0; i<innerPoints.length/chunkSize; i++) {
+    finalGraphPoints.push(innerPoints[i * chunkSize]);
+  }
+  finalGraphPoints.push(graphPoints[graphPoints.length-1]);
+  console.log(finalGraphPoints);
+
   document.getElementById("graphName").value = graphName;
-  points = graphPoints;
+  points = finalGraphPoints;
   updateScreen();
 };
 
