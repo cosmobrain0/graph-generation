@@ -228,6 +228,9 @@ document.getElementById("load-input-graph").onclick = () => {
         outputError("Coordinate '" + coordinate + "' should have an x coordinate at least as large as the previous coordinate!");
         return;
       }
+      if (graphPoints[i][0] < 0 || graphPoints[i][0] > 1) {
+        outputError("Coordinate '" + coordiante + "' should not have an x coordinate less than 0 or more than 1!");
+      }
       previousX = graphPoints[i][0];
     } catch (e) {
       outputError("Failed to parse coordinate number " + (i+1) + ": " + ordinates[0] + "," + ordinates[1]);
