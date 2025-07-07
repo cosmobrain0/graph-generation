@@ -7,6 +7,8 @@ c.height = 500;
 c.style.background = "#000";
 ctx.lineWidth = 3;
 
+const inputtingGraph = () => document.getElementById("inputting-graph").checked;
+
 const STARTING_INPUT_ID = "startingY";
 const ENDING_INPUT_ID = "endingY";
 
@@ -165,7 +167,33 @@ window.addEventListener("load", e => {
   points[0][1] = getInput("startingY");
   points[points.length-1][1] = getInput("endingY");
   updateScreen();
+  updateGraphInputOutput();
 })
+
+document.getElementById("inputting-graph").addEventListener("change", e => {
+  updateGraphInputOutput();
+});
+
+const updateGraphInputOutput = () => {
+  let graphOutput = document.getElementById("output");
+  let graphInput = document.getElementById("load-graph-outer");
+  if (inputtingGraph()) {
+    graphOutput.style = "display: none";
+    graphInput.style = "display: block";
+  } else {
+    graphOutput.style = "display: block";
+    graphInput.style = "display: none";
+  }
+};
+
+document.getElementById("load-input-graph").onclick = () => {
+  let inputData = document.getElementById("graph-data-input").value;
+  const graphName = inputData.split(" - ")[0];
+  const graphPoints = inputData.split(" - ")[1].split(" ; ").map(coordinate => coordinate.split(",").map(ordinate => parseFloat(ordinate)));
+  document.getElementById("graphName").value = graphName;
+  points = graphPoints;
+  updateScreen();
+};
 
 // window.addEventListener('mousemove', e => {
 //   let maxY = getMaxY();
