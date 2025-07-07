@@ -199,15 +199,44 @@ document.getElementById("load-input-graph").onclick = () => {
   try {
     graphName = inputData.split(" - ")[0];
   } catch (e) {
-    outputError("Input data is missing ' - ' between graph name and graph data!");
+    outputError("Input data is missing '-' between graph name and graph data!");
     return;
   }
-  let graphPoints;
+  let graphPoints, coordinateStrings;
   try {
-    graphPoints = inputData.split(" - ")[1].split(" ; ").map(coordinate => coordinate.split(",").map(ordinate => parseFloat(ordinate)));
+    coordinateStrings = inputData.split(" - ")[1].split(";");
   } catch (e) {
     outputError("Input data is missing ' - ' between graph name and graph data!");
     return;
+  }
+
+  graphPoints = [];
+  graphPoints = new Array(coordinateStrings.length);
+  let previousX = 0;
+  for (let i=0; i<coordinateStrings.length; i++) {
+    let coordinate = coordinateStrings[i];
+    let ordinates = coordinate.split(",");
+    console.log(ordinates);
+    if (ordinates.length != 2) {
+      console.log(ordinates);
+      outputError("Coordinate '" + coordinate + "' should be two comma-separated numbers (x and y)!");
+      return;
+    }
+    try {
+      graphPoints[i] = [parseFloat(ordinates[0]), parseFloat(ordinates[1])];
+      if (graphPoints[i][0] < previousX) {
+        outputError("Coordinate '" + coordinate + "' should have an x coordinate at least as large as the previous coordinate!");
+        return;
+      }
+      previousX = graphPoints[i][0];
+    } catch (e) {
+      outputError("Failed to parse coordinate number " + (i+1) + ": " + ordinates[0] + "," + ordinates[1]);
+      return;
+    }
+  }
+
+  if (graphPoints.length < 2) {
+    outputError("should be at least two distinct input points!");
   }
 
   if (graphPoints[0][0] != 0) {
@@ -241,7 +270,7 @@ let outputErrorStartTime = null;
 setInterval(() => {
   let outputElement = document.getElementById("input-graph-error");
   if (!outputElement) return;
-  if (Date.now() - outputErrorStartTime > 1000) {
+  if (Date.now() - outputErrorStartTime > 10000) {
     outputElement.innerText = "";
     outputErrorStartTime = null;
   }
