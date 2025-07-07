@@ -187,15 +187,44 @@ const updateGraphInputOutput = () => {
 };
 
 document.getElementById("load-input-graph").onclick = () => {
+  const outputError = error => {
+    document.getElementById("input-graph-error").innerText = error;
+    outputErrorStartTime = Date.now();
+  };
+
   let inputData = document.getElementById("graph-data-input").value;
   const samplePercentage = parseFloat(document.getElementById("input-sample-percent").value);
-  const graphName = inputData.split(" - ")[0];
-  let graphPoints = inputData.split(" - ")[1].split(" ; ").map(coordinate => coordinate.split(",").map(ordinate => parseFloat(ordinate)));
+
+  let graphName;
+  try {
+    graphName = inputData.split(" - ")[0];
+  } catch (e) {
+    outputError("Input data is missing ' - ' between graph name and graph data!");
+    return;
+  }
+  let graphPoints;
+  try {
+    graphPoints = inputData.split(" - ")[1].split(" ; ").map(coordinate => coordinate.split(",").map(ordinate => parseFloat(ordinate)));
+  } catch (e) {
+    outputError("Input data is missing ' - ' between graph name and graph data!");
+    return;
+  }
+
+  if (graphPoints[0][0] != 0) {
+    outputError("Input data should start with a point at x=0!");
+    return;
+  }
+  if (graphPoints[graphPoints.length-1][0] != 1) {
+    outputError("Input data should end with a point at x=1");
+    return;
+  }
+
+  document.getElementById(STARTING_INPUT_ID).value = graphPoints[0][1];
+  document.getElementById(ENDING_INPUT_ID).value = graphPoints[graphPoints.length-1][1];
 
   let innerPoints = graphPoints.slice(1, graphPoints.length-1);
   let chunkSize = Math.floor(1 / samplePercentage);
   chunkSize = Math.min(Math.max(0, chunkSize), innerPoints.length);
-  console.log(innerPoints.length / chunkSize);
   let finalGraphPoints = [graphPoints[0]];
   for (let i=0; i<innerPoints.length/chunkSize; i++) {
     finalGraphPoints.push(innerPoints[i * chunkSize]);
@@ -207,6 +236,16 @@ document.getElementById("load-input-graph").onclick = () => {
   points = finalGraphPoints;
   updateScreen();
 };
+
+let outputErrorStartTime = null;
+setInterval(() => {
+  let outputElement = document.getElementById("input-graph-error");
+  if (!outputElement) return;
+  if (Date.now() - outputErrorStartTime > 1000) {
+    outputElement.innerText = "";
+    outputErrorStartTime = null;
+  }
+}, 200);
 
 // window.addEventListener('mousemove', e => {
 //   let maxY = getMaxY();
